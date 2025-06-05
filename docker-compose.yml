@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  django:
+    build: ./django
+    container_name: django_app
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ./django:/app
+      - static_volume:/app/staticfiles
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    networks:
+      - backend
+
+  php:
+    image: php:8.3-apache
+    container_name: php_app
+    volumes:
+      - ./php:/var/www/html/
+    expose:
+      - "80"
+    networks:
+      - backend
+
+  nginx:
+    image: nginx:latest
+    container_name: nginx_reverse_proxy
+    volumes:
+      - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/staticfiles
+    ports:
+      - "80:80"
+    depends_on:
+      - django
+      - php
+    networks:
+      - backend
+
+  db:
+    image: mysql:5.7
+    container_name: mysql_db
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpass
+      MYSQL_DATABASE: breakingbad
+      MYSQL_USER: [YOUR-USER]
+      MYSQL_PASSWORD: [YOUR-PASSWORD]
+    volumes:
+      - db_data:/var/lib/mysql
+    networks:
+      - backend
+
+volumes:
+  db_data:
+  static_volume:
+
+networks:
+  backend:
+

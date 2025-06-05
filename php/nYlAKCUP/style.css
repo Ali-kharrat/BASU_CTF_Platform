@@ -1,0 +1,31 @@
+/* next level: /9iEpkJzZ/ */
+/* flag: FLAG{This_is_not_meth_rFvTgB1} */
+
+body {
+    background-color: #000;
+    color: #39ff14;
+    font-family: 'Courier New', monospace;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    text-align: center;
+}
+
+.hint-box {
+    border: 2px solid #39ff14;
+    padding: 20px;
+    border-radius: 10px;
+    max-width: 500px;
+    margin: auto;
+}
+
+.hint {
+    font-size: 1.5rem;
+}
+
+
