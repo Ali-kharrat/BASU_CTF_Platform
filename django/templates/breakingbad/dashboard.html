@@ -1,0 +1,78 @@
+{% extends "breakingbad/base.html" %}
+{% block title %}Dashboard - Breaking Bad CTF{% endblock %}
+
+{% block content %}
+
+<div class="row">
+    <!-- Right Section: Top Players Scoreboard -->
+    <div class="col-md-8">
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 15px;justify-content: space-between;">
+    <h1 style="margin: 0;">🧪 Welcome, {{ request.user.teams.first.name}}</h1>
+    <form action="{% url 'logout' %}" method="post" style="margin: 0;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-primary">logout</button>
+    </form>
+</div>
+{% if request.user.teams.exists %}
+    <small style="font-size: 0.8rem; color: #666;">
+        Team ID: {{ request.user.teams.first.team_id }}
+    </small>
+{% else %}
+    <small style="font-size: 0.8rem; color: #666;">
+        No team assigned
+    </small>
+{% endif %}
+<br>
+        <p>Your current points: <strong>{{ user_score.points }}</strong>&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp; &emsp;&ensp;<strong><b><a href="http://basucomp.com/level1/" traget="_blank">Chalenges</a></b></strong></p>
+        <hr><br>
+        <!-- Left Section: Flag Submission Box -->
+        <div class="col-md-4 offset-md-4">
+            <div class="card">
+                <div class="card-body">
+                    {% if messages %}
+                        {% for message in messages %}
+                            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                                {{ message }}
+                                {% comment %} <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> {% endcomment %}
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+                    <form method="POST" action="{% url 'submit_flag' %}">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <label for="flag_input">Flag must have this format: <b style="font-size:25">Flag{this_is_falg}</b></label>
+                            <input type="text" id="flag_input" name="flag" class="form-control" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary btn-block">Submit flag</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <br><hr>
+
+        <h2>🏆 Top Players</h2>
+        <table class="scoreboard table table-striped">
+            <thead>
+                <tr>
+                    <th>Rank</th>
+                    <th>Team</th>
+                    <th>Points</th>
+                    <th>Last Submit</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for score in top_scores %}
+                <tr {% if score.user == request.user %} style="background-color:#004400; color:white;" {% endif %}>
+                    <td>{{ forloop.counter }}</td>
+                    <td>{{ score.team.name }}</td>
+                    <td>{{ score.points }}</td>
+                    <td>{{ score.last_submit|date:"Y-m-d H:i" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No players yet.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

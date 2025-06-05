@@ -1,0 +1,17 @@
+{% extends "breakingbad/base.html" %}
+{% block title %}Register - Breaking Bad CTF{% endblock %}
+
+{% block content %}
+
+<h2>Register</h2>
+<div class="alert alert-warning">
+    ظرفیت ثبت‌نام حضوری تکمیل شده است. حضور شما به صورت <strong>مجازی</strong> خواهد بود.
+</div>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Join the Lab</button>
+</form>
+<p>Already have an account? <a href="{% url 'login' %}">Log in</a></p>
+{% endblock %}
